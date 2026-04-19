@@ -1,1 +1,23 @@
+import { routeRequest } from "../../lib/router.js";
+import { auth } from "../../lib/auth.js";
 
+export default async function handler(req, res) {
+
+  // 🔐 Security layer
+  const user = await auth(req);
+  if (!user) {
+    return res.status(401).json({ error: "unauthorized" });
+  }
+
+  // 🔀 Routing engine
+  const result = await routeRequest(req);
+
+  res.json({
+    status: "ok",
+    data: result,
+    meta: {
+      user: user.id,
+      timestamp: Date.now()
+    }
+  });
+}
