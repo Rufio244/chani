@@ -247,3 +247,73 @@ def dashboard():
         "keys":api_keys,
         "usage":usage_logs
     }
+chani.py
+
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI(title="CHANI Semantic Core")
+
+SEMANTIC = {
+"ฉัน": {"id": "SEM-000001", "concept": "SELF"},
+"ผม": {"id": "SEM-000001", "concept": "SELF"},
+"I": {"id": "SEM-000001", "concept": "SELF"},
+
+"ดื่ม": {"id": "ACT-000001", "concept": "DRINK"},
+"drink": {"id": "ACT-000001", "concept": "DRINK"},
+
+"น้ำ": {"id": "OBJ-000001", "concept": "WATER"},
+"water": {"id": "OBJ-000001", "concept": "WATER"},
+
+"เรียน": {"id": "ACT-000002", "concept": "LEARN"},
+"learn": {"id": "ACT-000002", "concept": "LEARN"},
+
+"สร้าง": {"id": "ACT-000003", "concept": "CREATE"},
+"create": {"id": "ACT-000003", "concept": "CREATE"}
+
+}
+
+class TextInput(BaseModel):
+text: str
+
+@app.get("/")
+def root():
+return {
+"name": "CHANI",
+"status": "online",
+"version": "1.0"
+}
+
+@app.get("/health")
+def health():
+return {
+"status": "online",
+"semantic_core": True
+}
+
+@app.post("/semantic/parse")
+def semantic_parse(data: TextInput):
+
+words = data.text.split()
+
+concepts = []
+
+for word in words:
+    if word in SEMANTIC:
+        concepts.append(SEMANTIC[word])
+
+return {
+    "input": data.text,
+    "semantic": concepts
+}
+
+@app.post("/agi")
+def agi(data: TextInput):
+
+cmd = data.text.replace("#AGI", "").strip()
+
+return {
+    "gateway": "CHANI",
+    "command": cmd,
+    "status": "accepted"
+    }
