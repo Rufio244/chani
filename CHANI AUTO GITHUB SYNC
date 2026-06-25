@@ -1,0 +1,45 @@
+CHANI AUTO GITHUB SYNC
+
+Workflow
+
+User
+↓
+Chani API
+↓
+Generate File
+↓
+GitHub API
+↓
+Create Repo (if not exists)
+↓
+Commit Files
+↓
+Push
+↓
+Return Repository URL
+
+Required Environment Variables
+
+GITHUB_TOKEN=YOUR_TOKEN
+GITHUB_OWNER=Rufio244
+
+Behavior
+
+- ตรวจสอบว่ามี Repository หรือยัง
+- ถ้ายังไม่มี ให้สร้าง Repository อัตโนมัติ
+- สร้าง README.md
+- Commit ไฟล์ทั้งหมด
+- Push ขึ้น GitHub
+- คืน URL ของ Repository
+
+Example Command
+
+POST /publish
+
+{
+"project_name": "chani-agent",
+"files": {
+"main.py": "print('hello')",
+"README.md": "# Chani Agent"
+}
+}
